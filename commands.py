@@ -10,7 +10,7 @@ def start_command(update: Update, context: CallbackContext) -> int:
         ["Операции с C числами"]
     ]
 
-    reply_kb_markup = ReplyKeyboardMarkup(kb)
+    reply_kb_markup = ReplyKeyboardMarkup(kb, one_time_keyboard=True)
     update.message.reply_text("Выберите действие", reply_markup=reply_kb_markup)
 
     return OP_BUTTON_STATE
