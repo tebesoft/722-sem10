@@ -1,10 +1,11 @@
 import logging
 
-from telegram.ext import Updater, CommandHandler, ConversationHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, ConversationHandler, MessageHandler, Filters, CallbackQueryHandler
 
 # Enable logging
 from commands import start_command
-from handlers import OP_BUTTON_STATE, op_select_handler
+from handlers import OP_BUTTON_STATE, op_select_handler, op_input_handler, OP_INPUT_STATE, NUM_A_STATE, NUM_B_STATE, \
+    num_b_handler, num_a_handler
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -30,7 +31,10 @@ def main() -> None:
     calc_conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start_command)],
         states={
-            OP_BUTTON_STATE: [MessageHandler(Filters.regex(r"R|C"), op_select_handler)]
+            OP_BUTTON_STATE: [MessageHandler(Filters.regex(r"R|C"), op_select_handler)],
+            OP_INPUT_STATE: [CallbackQueryHandler(op_input_handler)],
+            NUM_A_STATE: [MessageHandler(Filters.text, num_a_handler)],
+            NUM_B_STATE: [MessageHandler(Filters.text, num_b_handler)],
         },
         fallbacks=[]
     )
