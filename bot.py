@@ -1,15 +1,17 @@
 import logging
 
-from telegram.ext import Updater, CommandHandler
-
+from telegram.ext import Updater, CommandHandler, ConversationHandler
 
 # Enable logging
+from commands import start_command
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
-TOKEN = "516449158:AAHfQLPIjrxlKPe5f5kFqsFuTDGnS5hPNv8"
+TOKEN = ""
+
 
 
 def main() -> None:
@@ -24,6 +26,15 @@ def main() -> None:
     # on different commands - answer in Telegram
     # dispatcher.add_handler(CommandHandler("start", start))
 
+    calc_conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start_command)],
+        states={
+            OP_BUTTON_STATE: [MessageHandler(Filter.text, op_select_handler)]
+        },
+        fallbacks=[]
+    )
+
+    dispatcher.add_handler(calc_conv_handler)
 
     # Start the Bot
     updater.start_polling()
